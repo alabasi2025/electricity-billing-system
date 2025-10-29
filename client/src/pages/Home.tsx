@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { Activity, Users, Zap, FileText, DollarSign, AlertCircle } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Home() {
   const { data: customers } = trpc.customers.list.useQuery();
@@ -77,10 +78,10 @@ export default function Home() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {stats.map((stat, index) => {
+          {stats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
+              <Card key={stat.title} className="hover:shadow-lg transition-shadow duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium text-slate-600">
                     {stat.title}
@@ -198,34 +199,30 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <a
-                href="/customers"
-                className="p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-center"
-              >
-                <Users className="h-8 w-8 mx-auto mb-2 text-blue-600" />
-                <p className="font-medium text-slate-800">إدارة العملاء</p>
-              </a>
-              <a
-                href="/meters"
-                className="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors text-center"
-              >
-                <Zap className="h-8 w-8 mx-auto mb-2 text-green-600" />
-                <p className="font-medium text-slate-800">إدارة العدادات</p>
-              </a>
-              <a
-                href="/invoices"
-                className="p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors text-center"
-              >
-                <FileText className="h-8 w-8 mx-auto mb-2 text-yellow-600" />
-                <p className="font-medium text-slate-800">إدارة الفواتير</p>
-              </a>
-              <a
-                href="/complaints"
-                className="p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors text-center"
-              >
-                <AlertCircle className="h-8 w-8 mx-auto mb-2 text-red-600" />
-                <p className="font-medium text-slate-800">إدارة الشكاوى</p>
-              </a>
+              <Link key="customers" href="/customers">
+                <div className="p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-center cursor-pointer">
+                  <Users className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                  <p className="font-medium text-slate-800">إدارة العملاء</p>
+                </div>
+              </Link>
+              <Link key="meters" href="/meters">
+                <div className="p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors text-center cursor-pointer">
+                  <Zap className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <p className="font-medium text-slate-800">إدارة العدادات</p>
+                </div>
+              </Link>
+              <Link key="bills" href="/bills">
+                <div className="p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors text-center cursor-pointer">
+                  <FileText className="h-8 w-8 mx-auto mb-2 text-yellow-600" />
+                  <p className="font-medium text-slate-800">إدارة الفواتير</p>
+                </div>
+              </Link>
+              <Link key="complaints" href="/complaints">
+                <div className="p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors text-center cursor-pointer">
+                  <AlertCircle className="h-8 w-8 mx-auto mb-2 text-red-600" />
+                  <p className="font-medium text-slate-800">إدارة الشكاوى</p>
+                </div>
+              </Link>
             </div>
           </CardContent>
         </Card>
