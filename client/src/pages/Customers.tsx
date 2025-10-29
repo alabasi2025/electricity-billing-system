@@ -7,11 +7,11 @@ import { Plus, Search, Edit, Trash2, Eye } from "lucide-react";
 
 export default function Customers() {
   const [searchQuery, setSearchQuery] = useState("");
-  const { data: customers, isLoading } = trpc.customers.getAll.useQuery();
+  const { data: customers, isLoading } = trpc.customers.list.useQuery();
   const deleteCustomer = trpc.customers.delete.useMutation();
 
   const filteredCustomers = customers?.filter(
-    (customer) =>
+    (customer: any) =>
       customer.fullName.includes(searchQuery) ||
       customer.phone.includes(searchQuery) ||
       customer.nationalId?.includes(searchQuery)
@@ -19,7 +19,7 @@ export default function Customers() {
 
   const handleDelete = async (customerId: number) => {
     if (confirm("هل أنت متأكد من حذف هذا العميل؟")) {
-      await deleteCustomer.mutateAsync({ customerId });
+      await deleteCustomer.mutateAsync({ id: customerId });
       window.location.reload();
     }
   };
@@ -92,14 +92,14 @@ export default function Customers() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCustomers?.map((customer, index) => (
+                    {filteredCustomers?.map((customer: any, index: number) => (
                       <tr
-                        key={customer.customerId}
+                        key={customer.id}
                         className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
                       >
                         <td className="py-3 px-4 text-slate-600">{index + 1}</td>
                         <td className="py-3 px-4 font-medium text-slate-800">
-                          {customer.fullName}
+                          {customer.name}
                         </td>
                         <td className="py-3 px-4 text-slate-600">
                           {customer.nationalId || "-"}
@@ -113,9 +113,9 @@ export default function Customers() {
                         <td className="py-3 px-4">
                           <span
                             className={`px-2 py-1 rounded-full text-xs ${
-                              customer.status === "نشط"
+                              customer.status === "active"
                                 ? "bg-green-100 text-green-700"
-                                : customer.status === "متوقف"
+                                : customer.status === "suspended"
                                 ? "bg-red-100 text-red-700"
                                 : "bg-yellow-100 text-yellow-700"
                             }`}
@@ -143,7 +143,7 @@ export default function Customers() {
                               variant="ghost"
                               size="sm"
                               className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                              onClick={() => handleDelete(customer.customerId)}
+                              onClick={() => handleDelete(customer.id)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>

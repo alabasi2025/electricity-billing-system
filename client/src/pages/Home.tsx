@@ -4,11 +4,11 @@ import { trpc } from "@/lib/trpc";
 import { Activity, Users, Zap, FileText, DollarSign, AlertCircle } from "lucide-react";
 
 export default function Home() {
-  const { data: customers } = trpc.customers.getAll.useQuery();
-  const { data: meters } = trpc.meters.getAll.useQuery();
-  const { data: invoices } = trpc.invoices.getAll.useQuery();
-  const { data: payments } = trpc.payments.getAll.useQuery();
-  const { data: complaints } = trpc.complaints.getAll.useQuery();
+  const { data: customers } = trpc.customers.list.useQuery();
+  const { data: meters } = trpc.meters.list.useQuery();
+  const { data: invoices } = trpc.bills.list.useQuery();
+  const { data: payments } = trpc.payments.list.useQuery();
+  const { data: complaints } = trpc.complaints.list.useQuery();
 
   const stats = [
     {
@@ -21,7 +21,7 @@ export default function Home() {
     },
     {
       title: "العدادات النشطة",
-      value: meters?.filter(m => m.status === "نشط").length || 0,
+      value: meters?.filter((m: any) => m.status === "active").length || 0,
       icon: Zap,
       description: "عدادات قيد التشغيل",
       color: "text-green-600",
@@ -29,7 +29,7 @@ export default function Home() {
     },
     {
       title: "الفواتير المعلقة",
-      value: invoices?.filter(i => i.status === "معلقة").length || 0,
+      value: invoices?.filter((i: any) => i.status === "pending").length || 0,
       icon: FileText,
       description: "فواتير لم تُدفع بعد",
       color: "text-yellow-600",
@@ -37,7 +37,7 @@ export default function Home() {
     },
     {
       title: "إجمالي المدفوعات",
-      value: payments?.reduce((sum, p) => sum + Number(p.amount), 0).toFixed(2) || "0.00",
+      value: payments?.reduce((sum: number, p: any) => sum + Number(p.amount), 0).toFixed(2) || "0.00",
       icon: DollarSign,
       description: "المبلغ الإجمالي المحصل",
       color: "text-purple-600",
@@ -46,7 +46,7 @@ export default function Home() {
     },
     {
       title: "الشكاوى الجديدة",
-      value: complaints?.filter(c => c.status === "جديدة").length || 0,
+      value: complaints?.filter((c: any) => c.status === "جديدة").length || 0,
       icon: AlertCircle,
       description: "شكاوى تحتاج معالجة",
       color: "text-red-600",
@@ -113,7 +113,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {invoices?.slice(0, 5).map((invoice) => (
+                {invoices?.slice(0, 5).map((invoice: any) => (
                   <div
                     key={invoice.invoiceId}
                     className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
@@ -159,7 +159,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {complaints?.slice(0, 5).map((complaint) => (
+                {complaints?.slice(0, 5).map((complaint: any) => (
                   <div
                     key={complaint.complaintId}
                     className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
