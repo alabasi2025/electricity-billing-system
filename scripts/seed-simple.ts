@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import {
+  users,
   customers,
   customerConnections,
   meters,
@@ -21,7 +22,35 @@ async function seed() {
   console.log("🌱 بدء إدراج البيانات التجريبية المبسطة...\n");
 
   try {
-    // 1. Service Areas
+    // حذف البيانات القديمة
+    console.log("🗑️  حذف البيانات القديمة...");
+    await connection.query("SET FOREIGN_KEY_CHECKS = 0");
+    await connection.query("TRUNCATE TABLE complaints");
+    await connection.query("TRUNCATE TABLE payments");
+    await connection.query("TRUNCATE TABLE bills");
+    await connection.query("TRUNCATE TABLE meter_readings");
+    await connection.query("TRUNCATE TABLE meters");
+    await connection.query("TRUNCATE TABLE customer_connections");
+    await connection.query("TRUNCATE TABLE customers");
+    await connection.query("TRUNCATE TABLE tariffs");
+    await connection.query("TRUNCATE TABLE payment_methods");
+    await connection.query("TRUNCATE TABLE employees");
+    await connection.query("TRUNCATE TABLE service_areas");
+    await connection.query("TRUNCATE TABLE users");
+    await connection.query("SET FOREIGN_KEY_CHECKS = 1");
+    console.log("✅ تم حذف البيانات القديمة\n");
+
+    // 1. Users
+    console.log("👤 إضافة المستخدمين...");  
+    const [user1] = await db.insert(users).values({
+      openId: "admin-001",
+      name: "أحمد محمد العلي",
+      email: "ahmed.ali@electric.sa",
+      phone: "+966501234567",
+      role: "admin",
+    });
+
+    // 2. Service Areas
     console.log("📍 إضافة مناطق الخدمة...");
     const [area1] = await db.insert(serviceAreas).values({
       name: "الرياض - حي النخيل",
@@ -31,34 +60,30 @@ async function seed() {
       description: "منطقة سكنية راقية",
     });
 
-    // 2. Employees
+    // 3. Employees
     console.log("👥 إضافة الموظفين...");
     const [emp1] = await db.insert(employees).values({
+      userId: user1.insertId,
       employeeNumber: "EMP-001",
-      name: "أحمد محمد العلي",
-      email: "ahmed.ali@electric.sa",
-      phone: "+966501234567",
-      role: "field_technician",
       department: "الصيانة الميدانية",
       hireDate: new Date("2020-01-15"),
       status: "active",
     });
 
-    // 3. Payment Methods
+       // 4. Payment Methods
     console.log("💳 إضافة طرق الدفع...");
     const [pm1] = await db.insert(paymentMethods).values({
-      methodName: "نقدي",
-      methodType: "cash",
+      name: "نقدي",
+      type: "cash",
       isActive: true,
     });
-
     const [pm2] = await db.insert(paymentMethods).values({
-      methodName: "بطاقة ائتمانية",
-      methodType: "credit_card",
+      name: "بطاقة ائتمان",
+      type: "card",
       isActive: true,
     });
 
-    // 4. Tariffs
+    // 5. Tariffs
     console.log("💰 إضافة التعريفات...");
     const [tariff1] = await db.insert(tariffs).values({
       tariffCode: "RES-2024",
@@ -69,7 +94,7 @@ async function seed() {
       isActive: true,
     });
 
-    // 5. Customers
+    // 6. Customers
     console.log("👤 إضافة العملاء...");
     const [cust1] = await db.insert(customers).values({
       customerNumber: "CUST-001",
@@ -109,7 +134,7 @@ async function seed() {
       status: "active",
     });
 
-    // 6. Customer Connections
+    // 7. Customer Connections
     console.log("🔌 إضافة اتصالات العملاء...");
     const [conn1] = await db.insert(customerConnections).values({
       connectionNumber: "CONN-001",
@@ -147,7 +172,7 @@ async function seed() {
       status: "active",
     });
 
-    // 7. Meters
+    // 8. Meters
     console.log("⚡ إضافة العدادات...");
     const [meter1] = await db.insert(meters).values({
       meterNumber: "MTR-001",
@@ -188,7 +213,7 @@ async function seed() {
       status: "active",
     });
 
-    // 8. Meter Readings
+    // 9. Meter Readings
     console.log("📊 إضافة قراءات العدادات...");
     await db.insert(meterReadings).values([
       {
@@ -220,7 +245,7 @@ async function seed() {
       },
     ]);
 
-    // 9. Bills
+    // 10. Bills
     console.log("🧾 إضافة الفواتير...");
     const [bill1] = await db.insert(bills).values({
       billNumber: "BILL-2024-001",
@@ -273,7 +298,7 @@ async function seed() {
       status: "pending",
     });
 
-    // 10. Payments
+    // 11. Payments
     console.log("💵 إضافة المدفوعات...");
     await db.insert(payments).values([
       {
@@ -288,7 +313,7 @@ async function seed() {
       },
     ]);
 
-    // 11. Complaints
+    // 12. Complaints
     console.log("📢 إضافة الشكاوى...");
     await db.insert(complaints).values([
       {
@@ -318,6 +343,7 @@ async function seed() {
 
     console.log("\n✅ تم إدراج جميع البيانات التجريبية بنجاح!");
     console.log("\n📊 ملخص البيانات:");
+    console.log("   - 1 مستخدم");
     console.log("   - 1 منطقة خدمة");
     console.log("   - 1 موظف");
     console.log("   - 2 طريقة دفع");
