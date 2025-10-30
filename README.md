@@ -97,7 +97,7 @@
 
 ```bash
 # 1. استنساخ المشروع
-git clone https://github.com/yourusername/electricity-billing-api.git
+git clone https://github.com/alabasi2025/electricity-billing-system.git
 cd electricity-billing-api
 
 # 2. تثبيت الحزم
@@ -408,8 +408,8 @@ git push origin feature/amazing-feature
 إذا كنت تبحث عن أفكار للمساهمة، راجع:
 
 1. **[قائمة المهام](todo.md)** - 450+ ميزة مخططة
-2. **[Issues](https://github.com/yourusername/electricity-billing-api/issues)** - المشاكل المفتوحة
-3. **[Projects](https://github.com/yourusername/electricity-billing-api/projects)** - خارطة الطريق
+2. **[Issues](https://github.com/alabasi2025/electricity-billing-system/issues)** - المشاكل المفتوحة
+3. **[Projects](https://github.com/alabasi2025/electricity-billing-system/projects)** - خارطة الطريق
 
 **مهام للمبتدئين:**
 - إضافة ترجمة إنجليزية
